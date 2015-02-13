@@ -12,7 +12,8 @@ matrix:
     - php: hhvm
 
 before_script:
-  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.1/setup' -O - | php
+  - URL=$(curl -si https://github.com/xp-framework/xp-runners/releases/latest | awk '/^Location: / { print $2; }' | tr -d '\r' | sed -e 's|/tag/|/download/|')
+  - curl -sL $URL/setup | php
   - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
