@@ -220,7 +220,20 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   protected function _load($force= false) {
     if (!$force && null !== $this->_data) return;
-    $this->load(new FileInputStream($this->_file));
+    
+    $cacheEnabled= isset($_GET['cache']);
+    if ($cacheEnabled) {
+      $checksum= md5_file($this->_file);
+      $cacheFile= sys_get_temp_dir().'/xpcache_'.md5($this->_file).'_'.$checksum.'.php';
+      if (!file_exists($cacheFile)) {
+        $this->load(new FileInputStream($this->_file));
+        file_put_contents($cacheFile, '<?php return '.var_export($this->_data, true).';');
+      } else {
+        $this->_data= include($cacheFile);
+      }
+    } else {
+      $this->load(new FileInputStream($this->_file));
+    }
   }
   
   /**
