@@ -220,7 +220,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   protected function _load($force= false) {
     if (!$force && null !== $this->_data) return;
-    
+
     $cacheEnabled= isset($_GET['cache']);
     if ($cacheEnabled) {
       $checksum= md5_file($this->_file);
